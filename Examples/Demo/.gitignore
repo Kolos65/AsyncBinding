@@ -1,0 +1,9 @@
+/*.xcodeproj
+fastlane/report.xml
+fastlane/test_output
+fastlane/README.md
+*~
+.DS_Store
+.xcovignore
+xcodebuild.log
+build

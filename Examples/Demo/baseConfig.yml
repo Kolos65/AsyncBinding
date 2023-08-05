@@ -1,0 +1,21 @@
+name: ${PROJECT_NAME}
+options:
+  createIntermediateGroups: true
+  indentWidth: 4
+  tabWidth: 4
+  bundleIdPrefix: ${BUNDLE_ID}
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: ${DEPLOYMENT_TARGET}
+    TARGETED_DEVICE_FAMILY: 1,2
+    SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+    SUPPORTS_MACCATALYST: YES
+    SWIFT_INSTALL_OBJC_HEADER: NO
+    PROJECT_NAME: ${PROJECT_NAME}
+    OTHER_SWIFT_FLAGS: -Xfrontend -warn-long-function-bodies=400 -Xfrontend -warn-long-expression-type-checking=100
+packages:
+  Resolver:
+    url: "https://github.com/hmlongco/Resolver.git"
+    version: 1.5.0
+  AsyncBinding:
+    path: ../..

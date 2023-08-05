@@ -1,0 +1,12 @@
+analyzer_rules:
+  - unused_import
+  - unused_declaration
+file_length: 400
+function_body_length:
+  warning: 80
+type_name:
+  max_length:
+    warning: 60
+    error: 80
+line_length:
+  ignores_comments: true

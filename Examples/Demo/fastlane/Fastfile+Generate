@@ -1,0 +1,11 @@
+desc "Generate every modul with xcodegen in the project"
+lane :generate_project do |options|
+  generate_app
+end
+
+desc "Generate app project"
+lane :generate_app do
+    Dir.chdir("..") do
+      sh "xcodegen -p . -s project.yml"
+    end
+end
