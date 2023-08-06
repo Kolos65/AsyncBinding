@@ -13,7 +13,7 @@ A lightweight Swift package providing a utility for binding **async sequences** 
 
 ## Installation
 
-AsyncBinding supports [Swift Package Manager](https://www.swift.org/package-manager/), which is the recommended option, but we both know that you are going to copy and paste that single source file into your project.
+AsyncBinding supports [Swift Package Manager](https://www.swift.org/package-manager/), which is the recommended option.
 
 ## Usage
 
