@@ -10,6 +10,9 @@ import Resolver
 import Combine
 
 final class HomeScreenViewModel: ObservableObject {
+
+    // MARK: Constants
+
     private enum Constants {
         static let names = ["John", "Peter", "Adam", "David"]
         static let ages = (0..<100)
@@ -19,6 +22,8 @@ final class HomeScreenViewModel: ObservableObject {
             ["Green", "Red", "Blue"]
         ]
     }
+
+    // MARK: Errors
 
     enum HomeScreenError: Error, LocalizedError {
         case invalidName
@@ -32,6 +37,8 @@ final class HomeScreenViewModel: ObservableObject {
             }
         }
     }
+
+    // MARK: Data
 
     var name: AsyncThrowingStream<String, Error> {
         .init {

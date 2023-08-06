@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// An async binding's asynchronuknous operation.
+/// An async binding's asynchronous operation.
 public typealias AsyncBindingBlock = @Sendable () async -> Void
 
 /// A `@State` like property wrapper that ebables `View` properties to receive values from an `AsyncSequence` with the same `Element` type.
@@ -85,20 +85,20 @@ public struct AsyncBinding<Value>: DynamicProperty {
 
     // MARK: - Public methods
 
-    /// Sets the `AsyncBinding` to receive values from an `AsyncSequence`.
+    /// Sets the `AsyncBinding` to receive values from an `AsyncSequence`. Use this method to create a binding inside a `bind(_:)` block on a SwiftUI `View`.
     public func receive<S: AsyncSequence>(from sequence: S) -> AsyncBindingBlock where S.Element == Value {
         {
-            for await value in sequence.asBindingSequence() {
-                await setState(from: value)
+            for await result in sequence.asBindingSequence() {
+                await setState(from: result)
             }
         }
     }
 
-    /// Sets the `AsyncBinding` with an optional Value to receive values from an `AsyncSequence`.
+    /// Sets the `AsyncBinding` with an optional Value to receive values from an `AsyncSequence`. Use this method to create a binding inside a `bind(_:)` block on a SwiftUI `View`.
     public func receive<T, S: AsyncSequence>(from sequence: S) -> AsyncBindingBlock where T? == Value, S.Element == T {
         {
-            for await value in sequence.asBindingSequence() {
-                await setOptionalState(from: value)
+            for await result in sequence.asBindingSequence() {
+                await setOptionalState(from: result)
             }
         }
     }
@@ -106,24 +106,24 @@ public struct AsyncBinding<Value>: DynamicProperty {
     // MARK: - Private Methods
 
     @MainActor
-    private func setState(from newState: Result<Value, Error>) {
-        switch newState {
+    private func setState(from result: Result<Value, Error>) {
+        switch result {
         case .success(let value):
             state = value
             errorState = nil
-        case .failure(let failure):
-            errorState = failure
+        case .failure(let error):
+            errorState = error
         }
     }
 
     @MainActor
-    private func setOptionalState<T>(from newState: Result<T, Error>) where T? == Value {
-        switch newState {
+    private func setOptionalState<T>(from result: Result<T, Error>) where T? == Value {
+        switch result {
         case .success(let value):
             state = value
             errorState = nil
-        case .failure(let failure):
-            errorState = failure
+        case .failure(let error):
+            errorState = error
         }
     }
 }
@@ -131,12 +131,12 @@ public struct AsyncBinding<Value>: DynamicProperty {
 // MARK: - AsyncSequence Extensions
 
 extension AsyncSequence {
-    /// Assigns the values from the `AsyncSequence` to the `AsyncBinding` object.
+    /// Assigns values from the `AsyncSequence` to the `AsyncBinding` property. Use this method to create a binding inside a `bind(_:)` block on a SwiftUI `View`.
     public func assign(to state: AsyncBinding<Element>) -> AsyncBindingBlock {
         state.receive(from: self)
     }
 
-    /// Assigns the optional values from the `AsyncSequence` to the `AsyncBinding` object.
+    /// Assigns optional values from the `AsyncSequence` to the `AsyncBinding` property. Use this method to create a binding inside a `bind(_:)` block on a SwiftUI `View`.
     public func assign(to state: AsyncBinding<Element?>) -> AsyncBindingBlock {
         state.receive(from: self)
     }
@@ -154,7 +154,7 @@ public enum BindingBuilder {
 // MARK: - View Extensions
 
 extension View {
-    /// Build block to assign AsyncSeqeunces to @AsyncBinding properties. Bindings are created using the `.task` modifier, which guarantees correct Task cancellations based on the View's lifecycle. See the `.task` modifier for more info.
+    /// Build block to assign `AsyncSequences` to `@AsyncBinding` properties. Bindings are created using the `.task` modifier, which guarantees correct Task cancellations based on the View's lifecycle. See the `.task` modifier for more info.
     ///
     /// In the following example `AsyncSequences` of a `ViewModel` are assigned to `@AsyncBinding` properties of a `View`:
     ///

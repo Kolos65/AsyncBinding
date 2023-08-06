@@ -62,8 +62,10 @@ struct Screen: View {
 `AsyncBinding` captures and stores any **errors thrown** by the bound async sequence. You can verify if an error occurred using the **`hasError`** property and retrieve the error through the **`error`** property of the **`projectedValue`** of an **`@AsyncBinding`** property:
 
 ```swift
-if $name.hasError {
-    print("An error occurred: \($name.error!)")
+Text(colors.joined(separator: ", "))
+    .foregroundColor($colors.hasError ? .red : .black)
+if let error = $colors.error {
+    Text(error.localizedDescription)
 }
 ```
 
