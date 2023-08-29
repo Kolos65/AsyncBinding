@@ -72,7 +72,7 @@ if let error = $colors.error {
 `AsyncBinding` uses a custom sequence called **`AsyncBindingSequence`** under the hood to wrap the base sequence's values with a [**`Result`**](https://developer.apple.com/documentation/swift/result) type, thus creating a new sequence that **cannot throw**. This allows the base sequences to **remain active** even if an error was thrown. `AsyncBindingSequence` is inspired by `AsyncMapToResultSequence` from the [AsyncExtensions](https://github.com/sideeffect-io/AsyncExtensions) package.
 
 ## Demo Application
-The package contains a demo project for a comprehensive example of how to use **`AsyncBinding`**. Note that the demo project uses [XcodeGen](https://github.com/yonaskolb/XcodeGen) to generate the project file. See the `README.md` inside the project for more info.
+The package contains a demo project for a comprehensive example of how to use **`AsyncBinding`**. Note that the demo project uses [XcodeGen](https://github.com/yonaskolb/XcodeGen) to generate the project file. See the `README.md` inside the demo project for more info.
 
 ## Contributing
 

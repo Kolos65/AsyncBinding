@@ -37,10 +37,13 @@ extension View {
     ///             }
     ///         }
     ///     }
-    public func bind(@AsyncBindingBuilder _ bindings: @escaping () -> [AsyncBindingBlock]) -> some View {
+    public func bind(
+        @AsyncBindingBuilder _ bindings: @MainActor @Sendable @escaping () async -> [AsyncBindingBlock]
+    ) -> some View {
         task {
+            let bindings = await bindings()
             await withTaskGroup(of: Void.self) { group in
-                for binding in bindings() {
+                for binding in bindings {
                     group.addTask(operation: binding)
                 }
             }
