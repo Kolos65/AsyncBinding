@@ -43,10 +43,10 @@ public typealias AsyncBindingBlock = @Sendable () async -> Void
 ///     }
 @propertyWrapper
 public struct AsyncBinding<Value>: DynamicProperty {
-
     // MARK: - Private Properties
 
-    private var initial: Value
+    private let initial: Value
+    private let animation: Animation?
     @State private var state: Value?
     @State private var errorState: Error?
 
@@ -63,7 +63,7 @@ public struct AsyncBinding<Value>: DynamicProperty {
     public var projectedValue: Self { self }
 
     /// Indicates whether an error occurred during the execution of the underlying async sequence.
-    public var hasError: Bool { errorState != nil  }
+    public var hasError: Bool { errorState != nil }
 
     /// Error of the underlying AsyncSequence if it produced one.
     public var error: Error? { errorState }
@@ -71,18 +71,19 @@ public struct AsyncBinding<Value>: DynamicProperty {
     // MARK: - Inits
 
     /// Initializes an `AsyncBinding` object with an empty array as the initial value.
-    public init() where Value: ExpressibleByArrayLiteral {
-        self.initial = []
+    public init(animation: Animation? = nil) where Value: ExpressibleByArrayLiteral {
+        self.init(wrappedValue: [], animation: animation)
     }
 
     /// Initializes an `AsyncBinding` object with optional element type with nil as the initial value.
-    public init() where Value: ExpressibleByNilLiteral {
-        self.initial = nil
+    public init(animation: Animation? = nil) where Value: ExpressibleByNilLiteral {
+        self.init(wrappedValue: nil, animation: animation)
     }
 
     /// Initializes an `AsyncBinding` object with the given initial value.
-    public init(wrappedValue: Value) {
-        self.initial = wrappedValue
+    public init(wrappedValue: Value, animation: Animation? = nil) {
+        initial = wrappedValue
+        self.animation = animation
     }
 
     // MARK: - Public methods
@@ -113,23 +114,27 @@ public struct AsyncBinding<Value>: DynamicProperty {
 
     @MainActor
     private func setState(from result: Result<Value, Error>) {
-        switch result {
-        case .success(let value):
-            state = value
-            errorState = nil
-        case .failure(let error):
-            errorState = error
+        withAnimation(animation) {
+            switch result {
+            case let .success(value):
+                state = value
+                errorState = nil
+            case let .failure(error):
+                errorState = error
+            }
         }
     }
 
     @MainActor
     private func setOptionalState<T>(from result: Result<T, Error>) where T? == Value {
-        switch result {
-        case .success(let value):
-            state = value
-            errorState = nil
-        case .failure(let error):
-            errorState = error
+        withAnimation(animation) {
+            switch result {
+            case let .success(value):
+                state = value
+                errorState = nil
+            case let .failure(error):
+                errorState = error
+            }
         }
     }
 }
